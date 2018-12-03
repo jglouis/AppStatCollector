@@ -2,4 +2,5 @@
     <string name="app_name">AppStatCollector</string>
     <string name="title_activity_app_list">AppListActivity</string>
     <string name="indicator_reflecting_if_app_is_active_or_not">Indicator reflecting if app is active or not</string>
+    <string name="application_launch_icon">Application launch icon</string>
 </resources>
