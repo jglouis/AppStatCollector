@@ -19,33 +19,32 @@ import java.io.IOException
 
 class AppIconRequestHandler(context: Context) : RequestHandler() {
 
-    private val pm: PackageManager
-    private val dpi: Int
-    private val defaultAppIcon: Bitmap
-        @SuppressLint("ObsoleteSdkInt")
-        get() {
-            val drawable: Drawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                Resources.getSystem().getDrawableForDensity(
-                    android.R.mipmap.sym_def_app_icon, dpi
-                )!!
-            } else {
-                Resources.getSystem().getDrawable(
-                    android.R.drawable.sym_def_app_icon
-                )
-            }
-            return drawable.toBitmap()
-        }
-
-    init {
+    private val pm: PackageManager by lazy {
+        context.packageManager
+    }
+    private val dpi: Int by lazy {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        dpi = am.launcherLargeIconDensity
-        pm = context.packageManager
+        am.launcherLargeIconDensity
+    }
+    private val defaultAppIcon: Bitmap by lazy {
+        @SuppressLint("ObsoleteSdkInt")
+        val drawable: Drawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            @Suppress("DEPRECATION")
+            Resources.getSystem().getDrawableForDensity(
+                android.R.mipmap.sym_def_app_icon, dpi
+            )!!
+        } else {
+            @Suppress("DEPRECATION")
+            Resources.getSystem().getDrawable(
+                android.R.drawable.sym_def_app_icon
+            )
+        }
+        drawable.toBitmap()
     }
 
     override fun canHandleRequest(data: Request): Boolean {
-        return data.uri != null && TextUtils.equals(data.uri.getScheme(), SCHEME_PNAME)
+        return data.uri != null && TextUtils.equals(data.uri.scheme, SCHEME_PNAME)
     }
-
 
 
     @Throws(IOException::class, PackageManager.NameNotFoundException::class)
@@ -76,6 +75,7 @@ class AppIconRequestHandler(context: Context) : RequestHandler() {
     @SuppressLint("ObsoleteSdkInt")
     private fun getFullResIcon(resources: Resources, iconId: Int): Bitmap {
         val drawable: Drawable = try {
+            @Suppress("DEPRECATION")
             when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 -> resources.getDrawableForDensity(
                     iconId,
