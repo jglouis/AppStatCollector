@@ -1,5 +1,6 @@
 package xyz.hexode.appstatcollector
 
+import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.support.v7.widget.RecyclerView
@@ -8,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import javax.inject.Inject
 
-class AppListAdapter @Inject constructor(private val context:Context, private val applications: MutableList<ApplicationInfo>) :
+class AppListAdapter @Inject constructor(
+    private val context: Context,
+    private val applications: MutableList<ApplicationInfo>
+) :
     RecyclerView.Adapter<AppListAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -27,12 +30,20 @@ class AppListAdapter @Inject constructor(private val context:Context, private va
         val applicationInfo = applications[position]
         holder.packageNameTextView.text = applicationInfo.packageName
 
-        //TODO check if application is active using UsageStatsManager
-        Toast.makeText(context, "Hello", Toast.LENGTH_SHORT).show()
+        val isAppActive = (context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager)?.let {
+            !it.isAppInactive(applicationInfo.packageName)
+        }
+        holder.activityIndicatorImageView.setImageResource(
+            when (isAppActive) {
+                true -> R.drawable.ic_play
+                false -> R.drawable.ic_stop
+                null -> R.drawable.ic_question_mark
+            }
+        )
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val packageNameTextView = itemView.findViewById<TextView>(R.id.app_item_package_name)
-        val activityIndicatorImageView = itemView.findViewById<ImageView>(R.id.app_item_isActive)
+        val packageNameTextView = itemView.findViewById<TextView>(R.id.app_item_package_name)!!
+        val activityIndicatorImageView = itemView.findViewById<ImageView>(R.id.app_item_isActive)!!
     }
 }
