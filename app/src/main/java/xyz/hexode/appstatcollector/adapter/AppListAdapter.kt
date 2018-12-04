@@ -1,24 +1,23 @@
 package xyz.hexode.appstatcollector.adapter
 
 import android.app.usage.UsageStatsManager
-import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.net.Uri
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 import xyz.hexode.appstatcollector.R
-import java.lang.Exception
+import xyz.hexode.appstatcollector.util.android.getLaunchIconUri
+import xyz.hexode.appstatcollector.util.picasso.updateLaunchIcon
 import javax.inject.Inject
 
 class AppListAdapter @Inject constructor(
     private val context: Context,
+    private val cardClickListener: CardClickListener,
     private val applications: MutableList<ApplicationInfo>
 ) :
     RecyclerView.Adapter<AppListAdapter.ViewHolder>() {
@@ -40,10 +39,18 @@ class AppListAdapter @Inject constructor(
             !it.isAppInactive(applicationInfo.packageName)
         }
         holder.updateIndicator(isAppActive)
+
+        ViewCompat.setTransitionName(holder.appLaunchIconImageView, holder.adapterPosition.toString())
+        holder.itemView.setOnClickListener {
+            cardClickListener.onApplicationCardClick(
+                applicationInfo,
+                holder.appLaunchIconImageView
+            )
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val appLaunchIconImageView = itemView.findViewById<ImageView>(R.id.app_item_launch_icon)!!
+        val appLaunchIconImageView = itemView.findViewById<ImageView>(R.id.app_item_launch_icon)!!
         private val packageNameTextView = itemView.findViewById<TextView>(R.id.app_item_package_name)!!
         private val activityIndicatorImageView = itemView.findViewById<ImageView>(R.id.app_item_isActive)!!
 
@@ -52,28 +59,11 @@ class AppListAdapter @Inject constructor(
         }
 
         fun updateLaunchIcon(applicationInfo: ApplicationInfo) {
-            applicationInfo.icon
-
-            val resources = context.packageManager.getResourcesForApplication(applicationInfo.packageName)
-            val resourceId = applicationInfo.icon
-            if (resources != null && resourceId != 0) {
-                val uri = Uri.Builder()
-                    .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-                    .authority(resources.getResourcePackageName(resourceId))
-                    .appendPath(resources.getResourceTypeName(resourceId))
-                    .appendPath(resources.getResourceEntryName(resourceId))
-                    .build()
-                Picasso.get()
-                    .load(uri)
-                    .into(appLaunchIconImageView, object : Callback {
-                        override fun onSuccess() = Unit
-                        override fun onError(e: Exception?) {
-                            appLaunchIconImageView.setImageURI(uri)
-                        }
-                    })
-            } else {
+            val uri = context.getLaunchIconUri(applicationInfo)
+            if (uri != null)
+                appLaunchIconImageView.updateLaunchIcon(uri)
+            else
                 appLaunchIconImageView.setImageResource(android.R.drawable.sym_def_app_icon)
-            }
         }
 
         fun updateIndicator(isAppActive: Boolean?) {
