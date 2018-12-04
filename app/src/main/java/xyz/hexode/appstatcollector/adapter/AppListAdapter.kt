@@ -1,4 +1,4 @@
-package xyz.hexode.appstatcollector
+package xyz.hexode.appstatcollector.adapter
 
 import android.app.usage.UsageStatsManager
 import android.content.ContentResolver
@@ -11,7 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import xyz.hexode.appstatcollector.R
+import java.lang.Exception
 import javax.inject.Inject
 
 class AppListAdapter @Inject constructor(
@@ -31,10 +34,8 @@ class AppListAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val applicationInfo = applications[position]
-        holder.packageNameTextView.text = applicationInfo.packageName
-
+        holder.updatePackageName(applicationInfo.packageName)
         holder.updateLaunchIcon(applicationInfo)
-
         val isAppActive = (context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager)?.let {
             !it.isAppInactive(applicationInfo.packageName)
         }
@@ -42,11 +43,17 @@ class AppListAdapter @Inject constructor(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val appLaunchIconImageView = itemView.findViewById<ImageView>(R.id.app_item_launch_icon)!!
-        val packageNameTextView = itemView.findViewById<TextView>(R.id.app_item_package_name)!!
-        val activityIndicatorImageView = itemView.findViewById<ImageView>(R.id.app_item_isActive)!!
+        private val appLaunchIconImageView = itemView.findViewById<ImageView>(R.id.app_item_launch_icon)!!
+        private val packageNameTextView = itemView.findViewById<TextView>(R.id.app_item_package_name)!!
+        private val activityIndicatorImageView = itemView.findViewById<ImageView>(R.id.app_item_isActive)!!
+
+        fun updatePackageName(packageName: String) {
+            packageNameTextView.text = packageName
+        }
 
         fun updateLaunchIcon(applicationInfo: ApplicationInfo) {
+            applicationInfo.icon
+
             val resources = context.packageManager.getResourcesForApplication(applicationInfo.packageName)
             val resourceId = applicationInfo.icon
             if (resources != null && resourceId != 0) {
@@ -56,9 +63,16 @@ class AppListAdapter @Inject constructor(
                     .appendPath(resources.getResourceTypeName(resourceId))
                     .appendPath(resources.getResourceEntryName(resourceId))
                     .build()
-                Picasso.get().load(uri).into(appLaunchIconImageView)
+                Picasso.get()
+                    .load(uri)
+                    .into(appLaunchIconImageView, object : Callback {
+                        override fun onSuccess() = Unit
+                        override fun onError(e: Exception?) {
+                            appLaunchIconImageView.setImageURI(uri)
+                        }
+                    })
             } else {
-                Picasso.get().load(R.drawable.ic_question_mark)
+                appLaunchIconImageView.setImageResource(android.R.drawable.sym_def_app_icon)
             }
         }
 

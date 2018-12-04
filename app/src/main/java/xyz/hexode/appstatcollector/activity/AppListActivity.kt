@@ -1,4 +1,4 @@
-package xyz.hexode.appstatcollector
+package xyz.hexode.appstatcollector.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -6,6 +6,8 @@ import android.support.v7.widget.LinearLayoutManager
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_app_list.*
 import kotlinx.android.synthetic.main.content_app_list.*
+import xyz.hexode.appstatcollector.adapter.AppListAdapter
+import xyz.hexode.appstatcollector.R
 import javax.inject.Inject
 
 class AppListActivity : AppCompatActivity() {

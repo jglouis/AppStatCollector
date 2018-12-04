@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import dagger.Module
 import dagger.Provides
-import xyz.hexode.appstatcollector.AppListActivity
+import xyz.hexode.appstatcollector.activity.AppListActivity
 
 @Module
 class AppListActivityModule {

@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import xyz.hexode.appstatcollector.AppListActivity
+import xyz.hexode.appstatcollector.activity.AppListActivity
 import xyz.hexode.appstatcollector.application.AppStatCollectorApplication
 import xyz.hexode.appstatcollector.dagger.activity.AppListActivityModule
 import xyz.hexode.appstatcollector.dagger.activity.AppListActivityScope
