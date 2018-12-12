@@ -45,7 +45,7 @@ class AppDetailsActivity : AppCompatActivity() {
                 publicKeyTextView.text = "Public key\n${x509cert.publicKey}"
                 issuerTextView.text = "Issuer: ${x509cert.issuerDN}"
                 subjectTextView.text = "Subject: ${x509cert.subjectDN}"
-                validityTextView.text = "Validity\nNotBefore: ${x509cert.notBefore}\nNot After: ${x509cert.notAfter}"
+                validityTextView.text = "Validity\nNot Before: ${x509cert.notBefore}\nNot After: ${x509cert.notAfter}"
                 signatureAlgorithmTextView.text = "Signature Algorithm: ${x509cert.sigAlgName}"
                 rawSignatureTextView.text = "Raw Signature\n${x509cert.signature.toHex()}"
 

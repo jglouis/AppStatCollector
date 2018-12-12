@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import xyz.hexode.appstatcollector.R
 import xyz.hexode.appstatcollector.util.android.getLaunchIconUri
+import xyz.hexode.appstatcollector.util.android.isSystemApp
 import xyz.hexode.appstatcollector.util.picasso.updateLaunchIcon
 import javax.inject.Inject
 
@@ -39,6 +40,7 @@ class AppListAdapter @Inject constructor(
             !it.isAppInactive(applicationInfo.packageName)
         }
         holder.updateIndicator(isAppActive)
+        holder.updateSystemIconVisibility(context.isSystemApp(applicationInfo.packageName))
 
         holder.appLaunchIconImageView.transitionName = holder.adapterPosition.toString()
         holder.itemView.setOnClickListener {
@@ -53,6 +55,7 @@ class AppListAdapter @Inject constructor(
         val appLaunchIconImageView = itemView.findViewById<ImageView>(R.id.app_item_launch_icon)!!
         private val packageNameTextView = itemView.findViewById<TextView>(R.id.app_item_package_name)!!
         private val activityIndicatorImageView = itemView.findViewById<ImageView>(R.id.app_item_isActive)!!
+        private val appItemSystemIconImageView = itemView.findViewById<ImageView>(R.id.app_item_system_icon)!!
 
         fun updatePackageName(packageName: String) {
             packageNameTextView.text = packageName
@@ -73,6 +76,10 @@ class AppListAdapter @Inject constructor(
                 null -> R.drawable.ic_question_mark
             }
             activityIndicatorImageView.setImageResource(indicator)
+        }
+
+        fun updateSystemIconVisibility(isSystemApp: Boolean) {
+            appItemSystemIconImageView.visibility = if (isSystemApp) View.VISIBLE else View.INVISIBLE
         }
     }
 }

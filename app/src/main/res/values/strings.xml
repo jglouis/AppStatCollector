@@ -17,4 +17,5 @@
         Certificate\n4d:39:d3:84:69:e7:fb:a9:55:88:86:16:46:89:f4:99:af:50:65:c8:04:79:2f:2b:42:46:44:05:5f:04:9d:d0:d4:8a:1f:8c:cd:75:d5:a1:57:8d:a8:ae:44:58:33:a8:61:42:f1:a3:bd:b4:03:7a:d7:c9:2c:a1:76:f6:c8:63:0c:5a:c3:f0:3f:c2:c1:66:69:14:38:6c:ab:49:fe:fb:d7:01:d8:09:c3:80:d7:64:36:4b:18:b2:71:5d:3b:c5:1b:89:a7:87:c6:ec:d3:a6:a0:d4:51:34:ff:8a:66:82:b9:51:d8:61:58:3e:af:39:10:e5:3e:62:39:7b:d5:77:72:f1:42:0c:3b:3a:f9:72:cc:0f:e6:1b:72:85:1c:1a:3a:cf:7c:7f:be:fa:91:dc:e9:56:e3:46:20:52:fb:12:67:7e:4c:89:af:dc:e5:17:7b:7b:81:45:13:ba:c7:fb:50:04:dd:1a:f4:29:fa:1e:28:53:72:4e:64:37:29:4d:19:73:a7:6c:e5:63:34:da:9e:83:2e:d8:6e:b2:ef:62:8a:11:7b:b4:ac:d2:33:42:98:eb:cf:55:b5:d4:d9:89:79:23:69:45:9b:58:59:b5:49:4c:f4:45:e9:6a:47:e1:08:e8:aa:c4:b4:27:b4:f6:53:f4:31:3d:bc:43:61:84
     </string>
     <string name="sample_certificate_subject">Subject: C=US, O=Android, CN=Android Debug</string>
+    <string name="system_application_icon">System application icon</string>
 </resources>
