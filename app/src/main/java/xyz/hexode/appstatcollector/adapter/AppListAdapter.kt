@@ -40,7 +40,7 @@ class AppListAdapter @Inject constructor(
         }
         holder.updateIndicator(isAppActive)
 
-        ViewCompat.setTransitionName(holder.appLaunchIconImageView, holder.adapterPosition.toString())
+        holder.appLaunchIconImageView.transitionName = holder.adapterPosition.toString()
         holder.itemView.setOnClickListener {
             cardClickListener.onApplicationCardClick(
                 applicationInfo,
