@@ -30,6 +30,11 @@ class AppListAdapter @Inject constructor(
         )
     }
 
+    init {
+        // Sort the applications by alphabetical order
+        applications.sortBy { it.packageName }
+    }
+
     override fun getItemCount() = applications.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
