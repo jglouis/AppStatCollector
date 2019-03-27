@@ -3,7 +3,7 @@ package xyz.hexode.appstatcollector.adapter
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.support.v4.view.ViewCompat
+import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -41,9 +41,13 @@ class AppListAdapter @Inject constructor(
         val applicationInfo = applications[position]
         holder.updatePackageName(applicationInfo.packageName)
         holder.updateLaunchIcon(applicationInfo)
-        val isAppActive = (context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager)?.let {
-            !it.isAppInactive(applicationInfo.packageName)
-        }
+        val isAppActive = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            (context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager)?.let {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    !it.isAppInactive(applicationInfo.packageName)
+                } else null
+            }
+        } else null
         holder.updateIndicator(isAppActive)
         holder.updateSystemIconVisibility(context.isSystemApp(applicationInfo.packageName))
 
